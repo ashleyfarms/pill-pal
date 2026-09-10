@@ -6,7 +6,6 @@ import { SearchForm } from './components/SearchForm'
 import {
   checkoutReturnParams,
   checkoutUrl,
-  checkoutWasPending,
   clearCheckoutQuery,
   hydratePlusFromIdb,
   isPlusUnlocked,
@@ -82,7 +81,8 @@ export default function App() {
     }
 
     const ret = checkoutReturnParams()
-    if (ret.success || (ret.sessionId && checkoutWasPending())) {
+    // Unlock on checkout=success, plus=1, or any Stripe session id on the return URL.
+    if (ret.success) {
       applyPlus({ sessionId: ret.sessionId || undefined, source: 'stripe-return' }, true)
       clearCheckoutQuery()
     }

@@ -1,7 +1,8 @@
 /** Stripe billing for Pill Pal Plus ($1.99/mo after 14-day trial). Local receipt pattern like GigKeep / Scale Pal. */
 
 export const STRIPE_PAYMENT_LINK =
-  import.meta.env.VITE_STRIPE_PAYMENT_LINK || 'https://buy.stripe.com/28E3co2xVasc6EB7vL4AU08'
+  import.meta.env.VITE_STRIPE_PAYMENT_LINK ||
+  'https://buy.stripe.com/28E3co2xVasc6EB7vL4AU08'
 
 export const PLUS_KEY = 'pill-pal-plus-v1'
 export const PENDING_KEY = 'pill-pal-checkout-pending-v1'
@@ -212,17 +213,23 @@ export function clearCheckoutPending() {
   }
 }
 
+/** True when return URL hints checkout completed — any of these is enough. */
 export function checkoutReturnParams() {
   const q = new URLSearchParams(window.location.search)
+  const sessionId = q.get('session_id') || q.get('checkout_session_id') || null
+  const success =
+    q.get('checkout') === 'success' ||
+    q.get('plus') === '1' ||
+    Boolean(sessionId)
   return {
-    success: q.get('checkout') === 'success',
-    sessionId: q.get('session_id') || q.get('checkout_session_id') || null,
+    success,
+    sessionId,
   }
 }
 
 export function clearCheckoutQuery() {
   const url = new URL(window.location.href)
-  ;['checkout', 'session_id', 'checkout_session_id'].forEach((k) =>
+  ;['checkout', 'plus', 'session_id', 'checkout_session_id'].forEach((k) =>
     url.searchParams.delete(k),
   )
   window.history.replaceState({}, '', url.pathname + url.search + url.hash)
