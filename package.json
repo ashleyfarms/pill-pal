@@ -14,7 +14,6 @@
     "react-dom": "^19.2.8"
   },
   "devDependencies": {
-    "@netlify/functions": "^6.0.0",
     "@types/node": "^24.13.3",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.7",
@@ -23,5 +22,5 @@
     "typescript": "~6.0.2",
     "vite": "^8.3.0"
   },
-  "description": "Help-Pal Med Pal \u2014 medication facts, side effects, and news (not medical advice)"
+  "description": "Help-Pal Med Pal — medication facts, side effects, and news (not medical advice)"
 }

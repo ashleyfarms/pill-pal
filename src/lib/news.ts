@@ -4,7 +4,7 @@ export async function fetchNews(medication: string): Promise<NewsItem[]> {
   const q = medication.trim()
   if (!q) return []
 
-  const endpoint = `/.netlify/functions/news?q=${encodeURIComponent(q)}`
+  const endpoint = `/api/news?q=${encodeURIComponent(q)}`
   try {
     const res = await fetch(endpoint)
     if (!res.ok) {
