@@ -3,7 +3,8 @@ import { defineConfig } from 'vite'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: '/pill-pal/',
+  // Netlify: VITE_BASE=/ (default). GitHub Pages workflow sets /pill-pal/
+  base: process.env.VITE_BASE || '/',
   plugins: [react()],
   server: {
     proxy: {

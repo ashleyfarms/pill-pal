@@ -70,3 +70,17 @@ npm run preview
 ## Stack
 
 Vite + React + TypeScript · Netlify static + serverless news proxy · warm Help-Pal UI (coral + Playfair/Inter).
+
+## Tester gift unlocks
+
+Albert and David can unlock a gift/tester flag (persists in localStorage + IndexedDB backup for iPhone home-screen PWAs):
+
+- `?gift=albert` (also `ashley` → Albert)
+- `?gift=david`
+
+Or use the on-screen **Have a gift code?** box. Codes are case-insensitive: `albert`, `ashley`, `david`.
+
+Public free search stays open for everyone else. If a paywall is added later, gift unlocks it as active.
+
+GitHub Pages: https://ashleyfarms.github.io/pill-pal/?gift=albert
+

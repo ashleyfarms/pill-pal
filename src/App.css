@@ -371,3 +371,82 @@ main {
 .welcome-list {
   margin-bottom: 12px;
 }
+
+.gift-banner {
+  margin: 12px 0 0;
+  padding: 10px 14px;
+  background: var(--coral-soft);
+  border: 1px solid #f0c9bc;
+  color: #6b3e2e;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.gift-form {
+  background: var(--card);
+  border: 1px dashed var(--line);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+}
+
+.gift-label {
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.gift-row {
+  display: flex;
+  gap: 8px;
+}
+
+.gift-row input {
+  flex: 1;
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: #fff;
+}
+
+.gift-row button {
+  border: 0;
+  border-radius: 10px;
+  padding: 10px 14px;
+  background: var(--coral);
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.gift-row button:hover {
+  background: var(--coral-dark);
+}
+
+.gift-error {
+  margin: 8px 0 0;
+  color: var(--serious);
+  font-size: 0.85rem;
+}
+
+.toast {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  left: 16px;
+  max-width: 420px;
+  margin: 0 auto;
+  background: var(--ink);
+  color: #fff;
+  padding: 12px 16px;
+  border-radius: 12px;
+  z-index: 40;
+  box-shadow: var(--shadow);
+  text-align: center;
+  font-weight: 600;
+}
