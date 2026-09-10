@@ -1,5 +1,5 @@
 {
-  "name": "med-pal",
+  "name": "pill-pal",
   "private": true,
   "version": "1.0.0",
   "type": "module",
@@ -22,5 +22,5 @@
     "typescript": "~6.0.2",
     "vite": "^8.3.0"
   },
-  "description": "Help-Pal Med Pal — medication facts, side effects, and news (not medical advice)"
+  "description": "Help-Pal Pill Pal — medication facts, side effects, and news (not medical advice)"
 }

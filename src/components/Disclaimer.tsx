@@ -14,7 +14,7 @@ export function Disclaimer({ compact }: Props) {
     <aside className="disclaimer-card" role="note">
       <h2>Important</h2>
       <p>
-        <strong>Med Pal is not medical advice</strong> and does not replace a doctor,
+        <strong>Pill Pal is not medical advice</strong> and does not replace a doctor,
         pharmacist, or emergency care. We show publicly available labeling and news —
         we do <em>not</em> give dosing, diagnoses, or treatment recommendations.
       </p>

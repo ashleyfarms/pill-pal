@@ -37,7 +37,7 @@ export default function App() {
           </span>
           <div>
             <p className="brand-kicker">Help-Pal</p>
-            <h1>Med Pal</h1>
+            <h1>Pill Pal</h1>
           </div>
         </div>
         <p className="tagline">
@@ -89,7 +89,7 @@ export default function App() {
 
       <footer className="site-footer">
         <p>
-          Med Pal is part of the Help-Pal family. Public educational tool —{' '}
+          Pill Pal is part of the Help-Pal family. Public educational tool —{' '}
           <strong>not medical advice</strong>.
         </p>
         <p className="footer-links">

@@ -1,4 +1,4 @@
-# Med Pal
+# Pill Pal
 
 Phone-first Help-Pal app: type a medication → see **what it’s for**, **known side effects** (common vs serious), and **related news headlines**.
 
@@ -6,12 +6,12 @@ Phone-first Help-Pal app: type a medication → see **what it’s for**, **known
 
 ## Live / deploy
 
-Push is to [`ashleyfarms/med-pal`](https://github.com/ashleyfarms/med-pal).
+Push is to [`ashleyfarms/pill-pal`](https://github.com/ashleyfarms/pill-pal).
 
 ### Netlify (recommended)
 
 1. Log into [Netlify](https://app.netlify.com/) and **Add new site → Import an existing project**.
-2. Choose GitHub → `ashleyfarms/med-pal`.
+2. Choose GitHub → `ashleyfarms/pill-pal`.
 3. Build settings (already in `netlify.toml`):
    - Build command: `npm run build`
    - Publish directory: `dist`

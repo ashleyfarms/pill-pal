@@ -1,5 +1,5 @@
 /**
- * Google News RSS → JSON proxy for Med Pal.
+ * Google News RSS → JSON proxy for Pill Pal.
  * GET /.netlify/functions/news?q=ibuprofen
  */
 
@@ -70,7 +70,7 @@ export async function handler(event) {
   try {
     const res = await fetch(rssUrl, {
       headers: {
-        'User-Agent': 'MedPal/1.0 (educational; +https://help-pal.app)',
+        'User-Agent': 'PillPal/1.0 (educational; +https://help-pal.app)',
         Accept: 'application/rss+xml, application/xml, text/xml, */*',
       },
     })
