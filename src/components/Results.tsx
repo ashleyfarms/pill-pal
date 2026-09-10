@@ -140,9 +140,9 @@ export function Results({ result, onRetrySuggestion }: Props) {
           </ul>
         ) : (
           <p className="empty">
-            No headlines right now (news loads via the Netlify function on deploy).
-            Try again after the site is live, or search Google News for “
-            {identity.displayName}”.
+            No headlines right now. News may load via a CORS proxy on GitHub Pages,
+            or the Netlify <code>/api/news</code> function when available. You can also
+            search Google News for “{identity.displayName}”.
           </p>
         )}
         <p className="cite">Headlines via Google News RSS. Links open the publisher.</p>

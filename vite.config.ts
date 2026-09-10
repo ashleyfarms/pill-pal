@@ -3,6 +3,7 @@ import { defineConfig } from 'vite'
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: '/pill-pal/',
   plugins: [react()],
   server: {
     proxy: {

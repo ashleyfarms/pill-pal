@@ -6,9 +6,15 @@ Phone-first Help-Pal app: type a medication → see **what it’s for**, **known
 
 ## Live / deploy
 
-Push is to [`ashleyfarms/pill-pal`](https://github.com/ashleyfarms/pill-pal).
+**Live:** https://ashleyfarms.github.io/pill-pal/
 
-### Netlify (recommended)
+Push is to [`ashleyfarms/pill-pal`](https://github.com/ashleyfarms/pill-pal). Deployed via GitHub Actions → GitHub Pages (`base: '/pill-pal/'`).
+
+### GitHub Pages
+
+Workflow: `.github/workflows/deploy-pages.yml` builds with Vite and publishes `dist` on every push to `main`.
+
+### Netlify (optional — enables `/api/news` function)
 
 1. Log into [Netlify](https://app.netlify.com/) and **Add new site → Import an existing project**.
 2. Choose GitHub → `ashleyfarms/pill-pal`.
