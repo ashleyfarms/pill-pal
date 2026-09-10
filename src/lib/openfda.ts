@@ -11,6 +11,10 @@ type OpenFdaResult = {
   boxed_warning?: string[]
   warnings?: string[]
   warnings_and_cautions?: string[]
+  when_using?: string[]
+  stop_use?: string[]
+  ask_doctor?: string[]
+  ask_doctor_or_pharmacist?: string[]
   openfda?: {
     brand_name?: string[]
     generic_name?: string[]
@@ -47,6 +51,13 @@ function extractSideEffects(result: OpenFdaResult): SideEffectGroup {
       ? result.warnings_and_cautions
       : result.warnings,
   )
+  const whenUsing = firstText(result.when_using)
+  const stopUse = firstText(result.stop_use)
+  const askDoctor = firstText(
+    result.ask_doctor?.length
+      ? result.ask_doctor
+      : result.ask_doctor_or_pharmacist,
+  )
 
   const serious: string[] = []
   const common: string[] = []
@@ -72,8 +83,24 @@ function extractSideEffects(result: OpenFdaResult): SideEffectGroup {
     }
   }
 
+  // OTC Drug Facts often put effects under when_using / warnings instead of adverse_reactions
+  const whenClean = stripHtmlish(whenUsing)
+  if (whenClean) {
+    common.push(...splitSentences(whenClean).slice(0, 4))
+    if (!common.length) common.push(whenClean.slice(0, 280) + (whenClean.length > 280 ? '…' : ''))
+  }
+
   if (!common.length && adverseClean) {
     common.push(adverseClean.slice(0, 320) + (adverseClean.length > 320 ? '…' : ''))
+  }
+
+  const stopClean = stripHtmlish(stopUse)
+  if (stopClean) {
+    serious.push(...splitSentences(stopClean).slice(0, 3))
+  }
+  const askClean = stripHtmlish(askDoctor)
+  if (askClean && serious.length < 3) {
+    serious.push(...splitSentences(askClean).slice(0, 2))
   }
 
   if (!serious.length && warnings) {
@@ -84,7 +111,7 @@ function extractSideEffects(result: OpenFdaResult): SideEffectGroup {
   return {
     common: uniqKeep(common).slice(0, 6),
     serious: uniqKeep(serious).slice(0, 6),
-    rawAdverse: adverseClean || undefined,
+    rawAdverse: adverseClean || whenClean || undefined,
     rawBoxed: boxed ? stripHtmlish(boxed) : undefined,
     rawWarnings: warnings ? stripHtmlish(warnings) : undefined,
   }
