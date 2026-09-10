@@ -84,3 +84,11 @@ Public free search stays open for everyone else. If a paywall is added later, gi
 
 GitHub Pages: https://ashleyfarms.github.io/pill-pal/?gift=albert
 
+## Pill Pal Plus (Stripe)
+
+- **$1.99/mo** after a **14-day free trial** via Stripe Payment Link.
+- Gift unlocks (albert / ashley / david) keep full access forever.
+- Free users can search; full indications, side effects, and news require gift or Plus.
+- Local unlock after `?checkout=success` (localStorage + IndexedDB), same receipt pattern as GigKeep / Scale Pal.
+- Payment Link placeholder: `REPLACE_ME_STRIPE_LINK` in `src/lib/billing.ts` (or `VITE_STRIPE_PAYMENT_LINK`).
+

@@ -4,6 +4,20 @@ import { Disclaimer } from './components/Disclaimer'
 import { Results } from './components/Results'
 import { SearchForm } from './components/SearchForm'
 import {
+  checkoutReturnParams,
+  checkoutUrl,
+  checkoutWasPending,
+  clearCheckoutQuery,
+  hydratePlusFromIdb,
+  isPlusUnlocked,
+  isStripeLinkReady,
+  markCheckoutPending,
+  plusBannerText,
+  readPlus,
+  unlockPlus,
+  type PlusState,
+} from './lib/billing'
+import {
   hydrateGiftFromIdb,
   isGiftUnlocked,
   readGift,
@@ -29,6 +43,7 @@ export default function App() {
   const [result, setResult] = useState<SearchResult | null>(null)
   const [lastQuery, setLastQuery] = useState('')
   const [gift, setGift] = useState<GiftState | null>(() => readGift())
+  const [plus, setPlus] = useState<PlusState | null>(() => readPlus())
   const [nickname, setNickname] = useState(() => readNickname())
   const [toast, setToast] = useState('')
   const [giftCode, setGiftCode] = useState('')
@@ -47,6 +62,16 @@ export default function App() {
     return next
   }, [])
 
+  const applyPlus = useCallback(
+    (opts?: { sessionId?: string; source?: PlusState['source'] }, announce = true) => {
+      const next = unlockPlus(opts)
+      setPlus(next)
+      if (announce) flash('Plus unlocked — 14-day trial started on this device.')
+      return next
+    },
+    [],
+  )
+
   useEffect(() => {
     let cancelled = false
 
@@ -56,17 +81,27 @@ export default function App() {
       clearGiftQuery()
     }
 
-    // iPhone home-screen apps sometimes start with empty localStorage.
+    const ret = checkoutReturnParams()
+    if (ret.success || (ret.sessionId && checkoutWasPending())) {
+      applyPlus({ sessionId: ret.sessionId || undefined, source: 'stripe-return' }, true)
+      clearCheckoutQuery()
+    }
+
     void hydrateGiftFromIdb().then((fromIdb) => {
       if (cancelled || !fromIdb) return
       setGift((prev) => prev || fromIdb)
       setNickname((prev) => prev || fromIdb.nickname || fromIdb.giftFor)
     })
 
+    void hydratePlusFromIdb().then((fromIdb) => {
+      if (cancelled || !fromIdb) return
+      setPlus((prev) => prev || fromIdb)
+    })
+
     return () => {
       cancelled = true
     }
-  }, [applyGift])
+  }, [applyGift, applyPlus])
 
   function redeemGiftCode(raw: string) {
     const who = resolveGiftCode(raw)
@@ -81,6 +116,15 @@ export default function App() {
     e.preventDefault()
     const ok = redeemGiftCode(giftCode)
     if (!ok) setGiftMsg('That code did not work. Check with the person who sent it.')
+  }
+
+  function onStartTrial() {
+    if (!isStripeLinkReady()) {
+      flash('Payment link not ready yet — try again shortly.')
+      return
+    }
+    markCheckoutPending()
+    window.location.href = checkoutUrl({ nickname: readNickname() || undefined })
   }
 
   const runSearch = useCallback(async (query: string) => {
@@ -99,6 +143,9 @@ export default function App() {
   }, [])
 
   const giftOn = isGiftUnlocked(gift)
+  const plusOn = isPlusUnlocked(plus)
+  const fullAccess = giftOn || plusOn
+  const plusLabel = plusBannerText(plus)
 
   return (
     <div className="app">
@@ -123,31 +170,52 @@ export default function App() {
             {nickname ? ` · Hi, ${nickname}` : ''}
           </p>
         )}
+        {!giftOn && plusOn && plusLabel && (
+          <p className="gift-banner plus-banner" role="status">
+            {plusLabel}
+          </p>
+        )}
       </header>
 
       <main>
         <SearchForm initial={lastQuery} loading={loading} onSearch={runSearch} />
 
-        <form className="gift-form" onSubmit={onGiftSubmit}>
-          <div className="gift-label">Have a gift code?</div>
-          <div className="gift-row">
-            <input
-              value={giftCode}
-              onChange={(e) => setGiftCode(e.target.value)}
-              placeholder="Enter code"
-              autoCapitalize="none"
-              autoCorrect="off"
-              spellCheck={false}
-              aria-label="Gift code"
-            />
-            <button type="submit">Unlock</button>
-          </div>
-          {giftMsg && (
-            <p className="gift-error" role="alert">
-              {giftMsg}
+        {!fullAccess && (
+          <form className="gift-form" onSubmit={onGiftSubmit}>
+            <div className="gift-label">Have a gift code?</div>
+            <div className="gift-row">
+              <input
+                value={giftCode}
+                onChange={(e) => setGiftCode(e.target.value)}
+                placeholder="Enter code"
+                autoCapitalize="none"
+                autoCorrect="off"
+                spellCheck={false}
+                aria-label="Gift code"
+              />
+              <button type="submit">Unlock</button>
+            </div>
+            {giftMsg && (
+              <p className="gift-error" role="alert">
+                {giftMsg}
+              </p>
+            )}
+          </form>
+        )}
+
+        {!fullAccess && !result && !loading && (
+          <section className="panel upgrade-promo">
+            <p className="eyebrow">Pill Pal Plus</p>
+            <h2>Full results with a free trial</h2>
+            <p>
+              Search anytime. Full indications, side effects, and news need Plus —
+              <strong> $1.99/mo after a 14-day free trial</strong>.
             </p>
-          )}
-        </form>
+            <button type="button" className="upgrade-cta" onClick={onStartTrial}>
+              Start free trial
+            </button>
+          </section>
+        )}
 
         {loading && (
           <div className="panel loading" aria-live="polite">
@@ -167,7 +235,12 @@ export default function App() {
         )}
 
         {!loading && !error && result && (
-          <Results result={result} onRetrySuggestion={runSearch} />
+          <Results
+            result={result}
+            onRetrySuggestion={runSearch}
+            fullAccess={fullAccess}
+            onStartTrial={onStartTrial}
+          />
         )}
 
         {!loading && !result && !error && (
@@ -194,6 +267,7 @@ export default function App() {
         </p>
         <p className="footer-links">
           Data: openFDA · DailyMed · RxNorm · Google News RSS
+          {!fullAccess ? ' · Plus $1.99/mo after 14-day trial' : ''}
         </p>
       </footer>
 

@@ -4,6 +4,8 @@ import { Disclaimer } from './Disclaimer'
 type Props = {
   result: SearchResult
   onRetrySuggestion: (name: string) => void
+  fullAccess: boolean
+  onStartTrial: () => void
 }
 
 function truncate(text: string, max = 900): string {
@@ -11,7 +13,32 @@ function truncate(text: string, max = 900): string {
   return text.slice(0, max).trimEnd() + '…'
 }
 
-export function Results({ result, onRetrySuggestion }: Props) {
+function UpgradeCard({ onStartTrial }: { onStartTrial: () => void }) {
+  return (
+    <section className="panel upgrade-card" aria-labelledby="upgrade-title">
+      <p className="eyebrow">Pill Pal Plus</p>
+      <h3 id="upgrade-title">Unlock full medication details</h3>
+      <p>
+        Full indications, known side effects, and related news are included with Plus.
+        Start a <strong>14-day free trial</strong>, then <strong>$1.99/mo</strong>. Cancel
+        anytime from your Stripe receipt email.
+      </p>
+      <ul className="upgrade-list">
+        <li>What it’s for (full labeling language)</li>
+        <li>Common &amp; serious side-effect snippets</li>
+        <li>Related news headlines with sources</li>
+      </ul>
+      <button type="button" className="upgrade-cta" onClick={onStartTrial}>
+        Start free trial
+      </button>
+      <p className="upgrade-fine">
+        $1.99/mo after trial · unlocks on this phone or computer after Stripe checkout
+      </p>
+    </section>
+  )
+}
+
+export function Results({ result, onRetrySuggestion, fullAccess, onStartTrial }: Props) {
   const { identity, label, news, suggestions } = result
   const hasLabel = Boolean(label)
   const hasUseful =
@@ -38,6 +65,50 @@ export function Results({ result, onRetrySuggestion }: Props) {
         </p>
         <Disclaimer />
       </section>
+    )
+  }
+
+  const teaser = label?.indications
+    ? truncate(label.indications, 160)
+    : label?.purpose
+      ? truncate(label.purpose, 160)
+      : null
+
+  if (!fullAccess) {
+    return (
+      <div className="results results-locked">
+        <section className="panel identity">
+          <p className="eyebrow">Results for</p>
+          <h2>{identity.displayName}</h2>
+          <div className="meta-tags">
+            {identity.genericNames.slice(0, 2).map((n) => (
+              <span key={`g-${n}`} className="tag">
+                Generic: {n}
+              </span>
+            ))}
+            {identity.brandNames.slice(0, 2).map((n) => (
+              <span key={`b-${n}`} className="tag tag-brand">
+                Brand: {n}
+              </span>
+            ))}
+          </div>
+        </section>
+
+        <Disclaimer compact />
+
+        <section className="panel teaser-panel">
+          <h3>What it’s for</h3>
+          {teaser ? (
+            <p className="body-copy teaser-copy">{teaser}</p>
+          ) : (
+            <p className="empty">A short preview is available after we find labeling text.</p>
+          )}
+          <p className="locked-note">Full details, side effects, and news unlock with Plus.</p>
+        </section>
+
+        <UpgradeCard onStartTrial={onStartTrial} />
+        <Disclaimer />
+      </div>
     )
   }
 
