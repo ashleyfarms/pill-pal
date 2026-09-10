@@ -1,4 +1,4 @@
-/** Gift / tester unlock for Albert & David (same pattern as Scale Pal / Townline / GigKeep). */
+/** Gift / tester unlock for Albert, Ashley & David (same pattern as Scale Pal / Townline / GigKeep). */
 
 export const GIFT_KEY = 'pill-pal-gift-v1'
 export const NICKNAME_KEY = 'pill-pal-nickname-v1'
@@ -6,7 +6,7 @@ const IDB_NAME = 'pill-pal-kv'
 
 const GIFT_CODES: Record<string, string> = {
   albert: 'Albert',
-  ashley: 'Albert',
+  ashley: 'Ashley',
   david: 'David',
 }
 
