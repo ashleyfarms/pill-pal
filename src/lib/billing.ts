@@ -1,7 +1,7 @@
 /** Stripe billing for Pill Pal Plus ($1.99/mo after 14-day trial). Local receipt pattern like GigKeep / Scale Pal. */
 
 export const STRIPE_PAYMENT_LINK =
-  import.meta.env.VITE_STRIPE_PAYMENT_LINK || 'REPLACE_ME_STRIPE_LINK'
+  import.meta.env.VITE_STRIPE_PAYMENT_LINK || 'https://buy.stripe.com/28E3co2xVasc6EB7vL4AU08'
 
 export const PLUS_KEY = 'pill-pal-plus-v1'
 export const PENDING_KEY = 'pill-pal-checkout-pending-v1'
