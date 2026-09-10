@@ -1,0 +1,66 @@
+# Med Pal
+
+Phone-first Help-Pal app: type a medication → see **what it’s for**, **known side effects** (common vs serious), and **related news headlines**.
+
+> **Not medical advice.** Educational info from public labeling and news only. No accounts. No dosing advice.
+
+## Live / deploy
+
+Push is to [`ashleyfarms/med-pal`](https://github.com/ashleyfarms/med-pal).
+
+### Netlify (recommended)
+
+1. Log into [Netlify](https://app.netlify.com/) and **Add new site → Import an existing project**.
+2. Choose GitHub → `ashleyfarms/med-pal`.
+3. Build settings (already in `netlify.toml`):
+   - Build command: `npm run build`
+   - Publish directory: `dist`
+   - Functions directory: `netlify/functions`
+4. Deploy. Site should be **Public** (Site configuration → Access control → no password / no JWT gate).
+5. Optional custom domain via Help-Pal DNS.
+
+Or CLI (if you have a Netlify auth token):
+
+```bash
+npm i -g netlify-cli
+netlify login
+netlify init
+netlify deploy --prod
+```
+
+Local with functions:
+
+```bash
+npm i -g netlify-cli
+netlify dev
+```
+
+## APIs used
+
+| Source | Purpose |
+|--------|---------|
+| [RxNorm REST](https://rxnav.nlm.nih.gov/) | Brand/generic resolve, RxCUI, related names |
+| [openFDA Drug Label](https://open.fda.gov/apis/drug/label/) | Indications, adverse reactions, boxed warnings |
+| [DailyMed](https://dailymed.nlm.nih.gov/) | Deep-link to full SPL when `setid` present |
+| [Google News RSS](https://news.google.com/rss/search?q=...) | Related headlines (via Netlify function `/api/news`) |
+
+No API keys required for these public endpoints.
+
+## Try a sample search
+
+1. Open the deployed site (or `npm run dev` / `netlify dev`).
+2. Search **`ibuprofen`**, **`metformin`**, or **`Lipitor`**.
+3. Confirm sections: What it’s for · Known side effects · Related news · Sources.
+
+## Scripts
+
+```bash
+npm install
+npm run dev      # Vite only (news empty without Netlify function)
+npm run build    # must pass
+npm run preview
+```
+
+## Stack
+
+Vite + React + TypeScript · Netlify static + serverless news proxy · warm Help-Pal UI (coral + Playfair/Inter).
