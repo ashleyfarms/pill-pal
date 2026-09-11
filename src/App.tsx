@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import type { FormEvent } from 'react'
 import { Disclaimer } from './components/Disclaimer'
+import { HelpPalLink } from './components/HelpPalLink'
 import { Results } from './components/Results'
 import { SearchForm } from './components/SearchForm'
 import {
@@ -214,6 +215,7 @@ export default function App() {
             <button type="button" className="upgrade-cta" onClick={onStartTrial}>
               Start free trial
             </button>
+            <HelpPalLink />
           </section>
         )}
 
@@ -265,6 +267,7 @@ export default function App() {
           Pill Pal is part of the Help-Pal family. Public educational tool —{' '}
           <strong>not medical advice</strong>.
         </p>
+        <HelpPalLink />
         <p className="footer-links">
           Data: openFDA · DailyMed · RxNorm · Google News RSS
           {!fullAccess ? ' · Plus $1.99/mo after 14-day trial' : ''}

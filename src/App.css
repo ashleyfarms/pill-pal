@@ -518,3 +518,21 @@ main {
   background: linear-gradient(transparent, var(--card));
   pointer-events: none;
 }
+
+.help-pal-link {
+  margin: 0.75rem 0 0;
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+.help-pal-link a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.help-pal-link a:hover {
+  color: var(--ink, #1f2a24);
+}
+.site-footer .help-pal-link {
+  margin: 0.5rem 0;
+}
