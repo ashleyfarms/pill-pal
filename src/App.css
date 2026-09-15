@@ -536,3 +536,35 @@ main {
 .site-footer .help-pal-link {
   margin: 0.5rem 0;
 }
+
+/* Quiet ads */
+.ad-slot {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.75rem;
+  margin: 0.75rem 0;
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px dashed rgba(30, 58, 95, 0.28);
+  border-radius: 10px;
+  color: #6b7fa3;
+  font-size: 0.8rem;
+}
+.ad-slot--header {
+  margin-top: 12px;
+  justify-content: center;
+  min-height: 52px;
+}
+.ad-slot--in-feed {
+  min-height: 48px;
+}
+.ad-slot__badge {
+  flex-shrink: 0;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border: 1px solid rgba(30, 58, 95, 0.25);
+  border-radius: 5px;
+  padding: 0.1rem 0.35rem;
+}

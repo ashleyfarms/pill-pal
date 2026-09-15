@@ -1,21 +1,15 @@
 import { useCallback, useEffect, useState } from 'react'
 import type { FormEvent } from 'react'
+import { AdSlot } from './components/AdSlot'
 import { Disclaimer } from './components/Disclaimer'
 import { HelpPalLink } from './components/HelpPalLink'
 import { Results } from './components/Results'
 import { SearchForm } from './components/SearchForm'
 import {
   checkoutReturnParams,
-  checkoutUrl,
   clearCheckoutQuery,
   hydratePlusFromIdb,
-  isPlusUnlocked,
-  isStripeLinkReady,
-  markCheckoutPending,
-  plusBannerText,
-  readPlus,
   unlockPlus,
-  type PlusState,
 } from './lib/billing'
 import {
   hydrateGiftFromIdb,
@@ -43,7 +37,6 @@ export default function App() {
   const [result, setResult] = useState<SearchResult | null>(null)
   const [lastQuery, setLastQuery] = useState('')
   const [gift, setGift] = useState<GiftState | null>(() => readGift())
-  const [plus, setPlus] = useState<PlusState | null>(() => readPlus())
   const [nickname, setNickname] = useState(() => readNickname())
   const [toast, setToast] = useState('')
   const [giftCode, setGiftCode] = useState('')
@@ -62,16 +55,6 @@ export default function App() {
     return next
   }, [])
 
-  const applyPlus = useCallback(
-    (opts?: { sessionId?: string; source?: PlusState['source'] }, announce = true) => {
-      const next = unlockPlus(opts)
-      setPlus(next)
-      if (announce) flash('Plus unlocked — 14-day trial started on this device.')
-      return next
-    },
-    [],
-  )
-
   useEffect(() => {
     let cancelled = false
 
@@ -82,10 +65,10 @@ export default function App() {
     }
 
     const ret = checkoutReturnParams()
-    // Unlock on checkout=success, plus=1, or any Stripe session id on the return URL.
     if (ret.success) {
-      applyPlus({ sessionId: ret.sessionId || undefined, source: 'stripe-return' }, true)
+      unlockPlus({ sessionId: ret.sessionId || undefined, source: 'stripe-return' })
       clearCheckoutQuery()
+      flash('Welcome back — Pill Pal is free with ads.')
     }
 
     void hydrateGiftFromIdb().then((fromIdb) => {
@@ -94,15 +77,12 @@ export default function App() {
       setNickname((prev) => prev || fromIdb.nickname || fromIdb.giftFor)
     })
 
-    void hydratePlusFromIdb().then((fromIdb) => {
-      if (cancelled || !fromIdb) return
-      setPlus((prev) => prev || fromIdb)
-    })
+    void hydratePlusFromIdb()
 
     return () => {
       cancelled = true
     }
-  }, [applyGift, applyPlus])
+  }, [applyGift])
 
   function redeemGiftCode(raw: string) {
     const who = resolveGiftCode(raw)
@@ -117,15 +97,6 @@ export default function App() {
     e.preventDefault()
     const ok = redeemGiftCode(giftCode)
     if (!ok) setGiftMsg('That code did not work. Check with the person who sent it.')
-  }
-
-  function onStartTrial() {
-    if (!isStripeLinkReady()) {
-      flash('Payment link not ready yet — try again shortly.')
-      return
-    }
-    markCheckoutPending()
-    window.location.href = checkoutUrl({ nickname: readNickname() || undefined })
   }
 
   const runSearch = useCallback(async (query: string) => {
@@ -144,9 +115,6 @@ export default function App() {
   }, [])
 
   const giftOn = isGiftUnlocked(gift)
-  const plusOn = isPlusUnlocked(plus)
-  const fullAccess = giftOn || plusOn
-  const plusLabel = plusBannerText(plus)
 
   return (
     <div className="app">
@@ -163,7 +131,7 @@ export default function App() {
         </div>
         <p className="tagline">
           Type a medication. See what it’s for, known side effects, and related
-          headlines — with sources.
+          headlines — with sources. Free, supported by ads.
         </p>
         {giftOn && (
           <p className="gift-banner" role="status">
@@ -171,17 +139,13 @@ export default function App() {
             {nickname ? ` · Hi, ${nickname}` : ''}
           </p>
         )}
-        {!giftOn && plusOn && plusLabel && (
-          <p className="gift-banner plus-banner" role="status">
-            {plusLabel}
-          </p>
-        )}
+        <AdSlot slot="header" />
       </header>
 
       <main>
         <SearchForm initial={lastQuery} loading={loading} onSearch={runSearch} />
 
-        {!fullAccess && (
+        {!giftOn && (
           <form className="gift-form" onSubmit={onGiftSubmit}>
             <div className="gift-label">Have a gift code?</div>
             <div className="gift-row">
@@ -204,21 +168,6 @@ export default function App() {
           </form>
         )}
 
-        {!fullAccess && !result && !loading && (
-          <section className="panel upgrade-promo">
-            <p className="eyebrow">Pill Pal Plus</p>
-            <h2>Full results with a free trial</h2>
-            <p>
-              Search anytime. Full indications, side effects, and news need Plus —
-              <strong> $1.99/mo after a 14-day free trial</strong>.
-            </p>
-            <button type="button" className="upgrade-cta" onClick={onStartTrial}>
-              Start free trial
-            </button>
-            <HelpPalLink />
-          </section>
-        )}
-
         {loading && (
           <div className="panel loading" aria-live="polite">
             <div className="spinner" />
@@ -237,12 +186,7 @@ export default function App() {
         )}
 
         {!loading && !error && result && (
-          <Results
-            result={result}
-            onRetrySuggestion={runSearch}
-            fullAccess={fullAccess}
-            onStartTrial={onStartTrial}
-          />
+          <Results result={result} onRetrySuggestion={runSearch} />
         )}
 
         {!loading && !result && !error && (
@@ -253,8 +197,8 @@ export default function App() {
               language from FDA labeling, plus recent news headlines.
             </p>
             <ul className="welcome-list">
-              <li>No accounts. No dosing advice.</li>
-              <li>Citations to openFDA, DailyMed, RxNorm, and news publishers.</li>
+              <li>Free to use — supported by quiet ads.</li>
+              <li>No dosing advice. Citations to openFDA, DailyMed, RxNorm, and news.</li>
               <li>Phone-first, calm Help-Pal styling.</li>
             </ul>
             <Disclaimer />
@@ -265,12 +209,11 @@ export default function App() {
       <footer className="site-footer">
         <p>
           Pill Pal is part of the Help-Pal family. Public educational tool —{' '}
-          <strong>not medical advice</strong>.
+          <strong>not medical advice</strong>. Free with ads.
         </p>
         <HelpPalLink />
         <p className="footer-links">
           Data: openFDA · DailyMed · RxNorm · Google News RSS
-          {!fullAccess ? ' · Plus $1.99/mo after 14-day trial' : ''}
         </p>
       </footer>
 

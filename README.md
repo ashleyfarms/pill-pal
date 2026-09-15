@@ -84,25 +84,7 @@ Public free search stays open for everyone else. If a paywall is added later, gi
 
 GitHub Pages: https://ashleyfarms.github.io/pill-pal/?gift=albert
 
-## Pill Pal Plus (Stripe)
+## Monetization
 
-- **$1.99/mo** after a **14-day free trial** via Stripe Payment Link.
-- Gift unlocks (albert / ashley / david) keep full access forever.
-- Free users can search; full indications, side effects, and news require gift or Plus.
-- Local unlock (localStorage + IndexedDB) when the return URL has **any** of:
-  - `?checkout=success`
-  - `?plus=1`
-  - `session_id` (Stripe often appends this)
-  - `checkout_session_id`
-- Payment Link: https://buy.stripe.com/28E3co2xVasc6EB7vL4AU08 (override with `VITE_STRIPE_PAYMENT_LINK`).
-
-### After payment redirect URL
-
-In the Stripe Payment Link → **After payment** → redirect customers to:
-
-```
-https://pill-pal-app.netlify.app/?checkout=success
-```
-
-If the success URL is hard to configure, Plus still unlocks when Stripe appends `session_id` / `checkout_session_id`, or when the return URL includes `plus=1`.
+Free + ads. Stripe Plus checkout is paused; `src/lib/billing.ts` only clears legacy return URLs.
 
