@@ -1,1 +1,1 @@
-https://pill-pal-app.netlify.app/?checkout=success
+https://pillpal.help-pal-apps.com/?checkout=success

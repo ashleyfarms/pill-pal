@@ -6,15 +6,11 @@ Phone-first Help-Pal app: type a medication → see **what it’s for**, **known
 
 ## Live / deploy
 
-**Live:** https://ashleyfarms.github.io/pill-pal/
+**Live:** https://pillpal.help-pal-apps.com
 
-Push is to [`ashleyfarms/pill-pal`](https://github.com/ashleyfarms/pill-pal). Deployed via GitHub Actions → GitHub Pages (`base: '/pill-pal/'`).
+Push is to [`ashleyfarms/pill-pal`](https://github.com/ashleyfarms/pill-pal). Primary host is Netlify with custom domain `pillpal.help-pal-apps.com` (Netlify site also at `pill-pal-app.netlify.app`).
 
-### GitHub Pages
-
-Workflow: `.github/workflows/deploy-pages.yml` builds with Vite and publishes `dist` on every push to `main`.
-
-### Netlify (optional — enables `/api/news` function)
+### Netlify (enables `/api/news` function)
 
 1. Log into [Netlify](https://app.netlify.com/) and **Add new site → Import an existing project**.
 2. Choose GitHub → `ashleyfarms/pill-pal`.
@@ -23,7 +19,7 @@ Workflow: `.github/workflows/deploy-pages.yml` builds with Vite and publishes `d
    - Publish directory: `dist`
    - Functions directory: `netlify/functions`
 4. Deploy. Site should be **Public** (Site configuration → Access control → no password / no JWT gate).
-5. Optional custom domain via Help-Pal DNS.
+5. Custom domain: `pillpal.help-pal-apps.com` (Help-Pal DNS).
 
 Or CLI (if you have a Netlify auth token):
 
@@ -82,7 +78,7 @@ Or use the on-screen **Have a gift code?** box. Codes are case-insensitive: `alb
 
 Public free search stays open for everyone else. If a paywall is added later, gift unlocks it as active.
 
-GitHub Pages: https://ashleyfarms.github.io/pill-pal/?gift=albert
+Example: https://pillpal.help-pal-apps.com/?gift=albert
 
 ## Monetization
 
