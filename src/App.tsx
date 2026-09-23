@@ -130,8 +130,8 @@ export default function App() {
           </div>
         </div>
         <p className="tagline">
-          Type a medication. See what it’s for, known side effects, and related
-          headlines — with sources. Free, supported by ads.
+          <strong>Free with ads.</strong> Type a medication. See what it’s for,
+          known side effects, and related headlines — with sources.
         </p>
         {giftOn && (
           <p className="gift-banner" role="status">
