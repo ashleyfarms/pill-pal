@@ -213,7 +213,7 @@ export default function App() {
         </p>
         <HelpPalLink />
         <p className="footer-links">
-          Data: openFDA · DailyMed · RxNorm · Google News RSS
+          Data: openFDA · DailyMed · RxNorm · Google News RSS · <a href="/privacy.html">Privacy</a>
         </p>
       </footer>
 
