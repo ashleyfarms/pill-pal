@@ -205,6 +205,8 @@ export default function App() {
             <Disclaimer />
           </section>
         )}
+
+        <AmazonPick />
       </main>
 
       <footer className="site-footer">
@@ -213,7 +215,6 @@ export default function App() {
           <strong>not medical advice</strong>. Free with ads.
         </p>
         <HelpPalLink />
-        <AmazonPick />
         <p className="footer-links">
           Data: openFDA · DailyMed · RxNorm · Google News RSS · <a href="/privacy.html">Privacy</a>
         </p>
