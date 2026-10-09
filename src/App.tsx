@@ -3,6 +3,7 @@ import type { FormEvent } from 'react'
 import { AdSlot } from './components/AdSlot'
 import { Disclaimer } from './components/Disclaimer'
 import { HelpPalLink } from './components/HelpPalLink'
+import { AmazonPick } from './components/AmazonPick'
 import { Results } from './components/Results'
 import { SearchForm } from './components/SearchForm'
 import {
@@ -212,6 +213,7 @@ export default function App() {
           <strong>not medical advice</strong>. Free with ads.
         </p>
         <HelpPalLink />
+        <AmazonPick />
         <p className="footer-links">
           Data: openFDA · DailyMed · RxNorm · Google News RSS · <a href="/privacy.html">Privacy</a>
         </p>
