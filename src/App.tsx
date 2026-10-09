@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from 'react'
-import type { FormEvent } from 'react'
 import { AdSlot } from './components/AdSlot'
 import { Disclaimer } from './components/Disclaimer'
 import { HelpPalLink } from './components/HelpPalLink'
@@ -40,8 +39,6 @@ export default function App() {
   const [gift, setGift] = useState<GiftState | null>(() => readGift())
   const [nickname, setNickname] = useState(() => readNickname())
   const [toast, setToast] = useState('')
-  const [giftCode, setGiftCode] = useState('')
-  const [giftMsg, setGiftMsg] = useState('')
 
   function flash(msg: string) {
     setToast(msg)
@@ -84,21 +81,6 @@ export default function App() {
       cancelled = true
     }
   }, [applyGift])
-
-  function redeemGiftCode(raw: string) {
-    const who = resolveGiftCode(raw)
-    if (!who) return false
-    applyGift(who, true)
-    setGiftCode('')
-    setGiftMsg('')
-    return true
-  }
-
-  function onGiftSubmit(e: FormEvent) {
-    e.preventDefault()
-    const ok = redeemGiftCode(giftCode)
-    if (!ok) setGiftMsg('That code did not work. Check with the person who sent it.')
-  }
 
   const runSearch = useCallback(async (query: string) => {
     setLoading(true)
@@ -145,29 +127,6 @@ export default function App() {
 
       <main>
         <SearchForm initial={lastQuery} loading={loading} onSearch={runSearch} />
-
-        {!giftOn && (
-          <form className="gift-form" onSubmit={onGiftSubmit}>
-            <div className="gift-label">Have a gift code?</div>
-            <div className="gift-row">
-              <input
-                value={giftCode}
-                onChange={(e) => setGiftCode(e.target.value)}
-                placeholder="Enter code"
-                autoCapitalize="none"
-                autoCorrect="off"
-                spellCheck={false}
-                aria-label="Gift code"
-              />
-              <button type="submit">Unlock</button>
-            </div>
-            {giftMsg && (
-              <p className="gift-error" role="alert">
-                {giftMsg}
-              </p>
-            )}
-          </form>
-        )}
 
         {loading && (
           <div className="panel loading" aria-live="polite">
