@@ -7,7 +7,7 @@
     <meta name="theme-color" content="#ee6c4d" />
     <meta
       name="description"
-      content="Pill Pal — look up what a medication is for, known side effects, and related news. Not medical advice."
+      content="Pill Pal — free with ads. Look up what a medication is for, known side effects, and related news. Not medical advice."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -27,9 +27,38 @@
       gtag('js', new Date());
       gtag('config', 'G-E7PX36SGJE');
     </script>
+<script>
+/* Help-Pal usage events v1: app_used, return_visit, repeat_user (see /workspace/analytics/USAGE-TRACKING.md) */
+(function (A) { try {
+  var K = 'hp_seen_' + A, s = {}, done = false, d = new Date();
+  var T = d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2);
+  function ev(n, p) { try { if (typeof window.gtag === 'function') { p = p || {}; p.app = A; window.gtag('event', n, p); } } catch (e) {} }
+  function save() { try { localStorage.setItem(K, JSON.stringify(s)); } catch (e) {} }
+  try { s = JSON.parse(localStorage.getItem(K) || '{}') || {}; } catch (e) { s = {}; }
+  if (s.last && s.last !== T) ev('return_visit', { days_since_last: Math.max(1, Math.round((Date.parse(T) - Date.parse(s.last)) / 864e5)) || 1 });
+  if (!s.first) s.first = T;
+  s.last = T; save();
+  function hit(e) { try {
+    if (done) return;
+    var t = e.target; if (!t || !t.closest) return;
+    if (e.type === 'click') {
+      var c = t.closest('button,[role=button],input[type=submit],input[type=button],a.btn,a[class*="btn"],a[class*="button"]');
+      if (!c || c.closest('nav,footer,ins,.adsbygoogle')) return;
+      if (c.tagName === 'A' && c.hostname && c.hostname !== location.hostname) return;
+    } else if (!t.closest('input,select,textarea,[contenteditable]')) return;
+    done = true;
+    var again = s.used && s.used !== T;
+    ev('app_used'); if (again) ev('repeat_user');
+    s.used = T; save();
+    ['click', 'input', 'change'].forEach(function (n) { document.removeEventListener(n, hit, true); });
+  } catch (x) {} }
+  ['click', 'input', 'change'].forEach(function (n) { document.addEventListener(n, hit, true); });
+} catch (e) {} })('pillpal');
+</script>
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
-  </body>
+  <section id="hp-about" style="max-width:720px;margin:2em auto;padding:0 16px 2em;font:15px/1.6 system-ui,sans-serif;color:#444"><h2 style="font-size:1.1rem">About Pill Pal</h2><p>Pill Pal lets you look up what a medication is usually prescribed for, its commonly reported side effects, and recent news about it, in plain English. Information comes from public sources such as the U.S. National Library of Medicine and the FDA.</p><p>Pill Pal is free with ads: nothing to buy, no subscription. Made by Albert Jones as part of <a href="https://www.help-pal-apps.com/">Help-Pal</a>.</p><p><a href="/about.html">About</a> &middot; <a href="/contact.html">Contact</a> &middot; <a href="/privacy.html">Privacy</a> &middot; <a href="https://www.help-pal-apps.com/our-app-collection">More free apps</a></p></section>
+</body>
 </html>
